@@ -8,19 +8,31 @@
             <div class="label">
               <span class="label-text">Título</span>
             </div>
-            <input formControlName="title" type="text" placeholder="Ingresa el título de la tarea"
-                   class="input input-bordered w-full"/>
+            <input
+              formControlName="title"
+              type="text"
+              placeholder="Ingresa el título de la tarea"
+              class="input input-bordered w-full"
+            />
           </label>
           <label class="form-control w-full">
             <div class="label">
               <span class="label-text">Descripción</span>
             </div>
-            <textarea formControlName="description" placeholder="Ingresa la descripción de la tarea"
-                      class="textarea textarea-bordered w-full"></textarea>
+            <textarea
+              formControlName="description"
+              placeholder="Ingresa la descripción de la tarea"
+              class="textarea textarea-bordered w-full"
+            ></textarea>
           </label>
           <div class="form-control w-full">
             <label class="label cursor-pointer">
-              <input type="checkbox" checked="checked" class="checkbox" formControlName="isCompleted" />
+              <input
+                type="checkbox"
+                checked="checked"
+                class="checkbox"
+                formControlName="isCompleted"
+              />
               <span class="label-text">Marcar como completada</span>
             </label>
           </div>
@@ -28,7 +40,13 @@
       </div>
       <div class="modal-action">
         <button class="btn" (click)="handleCancel()">Cancelar</button>
-        <button class="btn btn-primary" type="submit" [disabled]="taskForm.invalid">Crear</button>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="taskForm.invalid"
+        >
+          Crear
+        </button>
       </div>
     </form>
   </div>

@@ -1,33 +1,48 @@
 <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-  <div class=" w-full h-full bg-base-200 flex items-center justify-center">
+  <div class="w-full h-full bg-base-200 flex items-center justify-center">
     <button class="btn btn-neutral btn-outline" (click)="handleCreateTask()">
-      Crear tarea
-      <i class="fa-solid fa-plus"></i>
+      <span> Crear tarea </span>
+      <i class="fa-solid fa-plus pt-1"></i>
     </button>
   </div>
   @for (task of visibleTasks(); track task.id) {
     <div class="flex flex-col w-full bg-base-200 shadow">
-      <div class="py-2 pl-4 pr-1 flex justify-between items-center rounded-t-lg"
-           [ngClass]="{'bg-success': task.isCompleted, 'bg-warning': !task.isCompleted}">
-        <input type="checkbox" [checked]="task.isCompleted"
-               class="checkbox checkbox-primary mr-2" (change)="handleTaskCheckboxChange(task)"/>
+      <div
+        class="py-2 pl-4 pr-1 flex justify-between items-center rounded-t-lg"
+        [ngClass]="{
+          'bg-success': task.isCompleted,
+          'bg-warning': !task.isCompleted,
+        }"
+      >
+        <input
+          type="checkbox"
+          [checked]="task.isCompleted"
+          class="checkbox checkbox-primary mr-2"
+          (change)="handleTaskCheckboxChange(task)"
+        />
         <h2 class="font-bold text-sm truncate">{{ task.title }}</h2>
-        <div class="dropdown">
-          <div tabindex="0" role="button" class="btn btn-circle btn-ghost">
-            <i class="fa-solid fa-ellipsis-vertical"></i>
+        @if (!task.isCompleted) {
+          <div
+            class="pr-4 cursor-pointer text-sm"
+            (click)="handleUpdateTask(task)"
+          >
+            <i class="fa-solid fa-edit"></i>
           </div>
-          <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-32 p-2 shadow">
-            <li><a (click)="handleUpdateTask(task)">Editar</a></li>
-            <li><a (click)="handleDeleteTask(task)">Eliminar</a></li>
-          </ul>
-        </div>
+        } @else {
+          <div
+            class="pr-4 cursor-pointer text-sm"
+            (click)="andleDeleteTask(task)"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </div>
+        }
       </div>
       <div class="p-4">
         <p class="mb-4 text-sm">
           {{ task.description }}
         </p>
-        <div class="badge badge-info">
-          Creado: {{ task.createDate | date: 'dd/MM/yyyy' }}
+        <div class="badge badge-info text-xs">
+          Creado: {{ task.createDate | date: "dd/MM/yyyy" }}
         </div>
       </div>
     </div>

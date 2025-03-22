@@ -1,11 +1,20 @@
-<div class="w-full h-screen flex items-center justify-center">
-  <form [formGroup]="loginForm" (ngSubmit)="handleFormSubmit()">
+<div
+  class="w-screen h-screen flex items-center justify-center"
+  style="background: linear-gradient(to bottom, #d0e1f9, #f1f6f9)"
+>
+  <form
+    [formGroup]="loginForm"
+    (ngSubmit)="handleFormSubmit()"
+    class="p-6 rounded-lg shadow-lg bg-white"
+  >
     <div class="card bg-base-100 w-96 md:shadow-xl">
       <div class="card-body">
-        <h2 class="card-title">Validación de usuario</h2>
-        <p class="text-sm">Ingresa tu correo para validar el acceso.</p>
+        <h2 class="text-center text-2xl font-bold">Validación de usuario</h2>
+        <p class="text-sm text-center text-gray-600">
+          Ingresa tu correo para validar el acceso.
+        </p>
         @if (erorrMessage()) {
-          <div role="alert" class="alert alert-error">
+          <div role="alert" class="alert alert-error mt-4">
             <i class="fa-solid fa-circle-exclamation"></i>
             <span>Ocurrio un error, intenta de nuevo.</span>
           </div>
@@ -14,11 +23,21 @@
           <div class="label">
             <span class="label-text">Correo</span>
           </div>
-          <input formControlName="email" type="text" placeholder="Ingresa tu correo"
-                 class="input input-bordered w-full"/>
+          <input
+            formControlName="email"
+            type="text"
+            placeholder="Ingresa tu correo"
+            class="input input-bordered w-full border-gray-300 focus:border-black focus:ring focus:ring-blue-200"
+          />
         </label>
-        <div class="card-actions justify-end">
-          <button class="btn btn-primary" [disabled]="loginForm.invalid" type="submit">Validar</button>
+        <div class="card-actions justify-end mt-6">
+          <button
+            class="btn btn-primary w-full"
+            [disabled]="loginForm.invalid"
+            type="submit"
+          >
+            Validar
+          </button>
         </div>
       </div>
     </div>

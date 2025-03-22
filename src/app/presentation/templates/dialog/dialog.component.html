@@ -1,10 +1,17 @@
-<dialog class="modal modal-bottom sm:modal-middle" [ngClass]="{'modal-open': isOpen()}">
+<dialog
+  class="modal modal-bottom sm:modal-middle"
+  [ngClass]="{ 'modal-open': isOpen() }"
+>
   <div class="modal-box">
     <h3 class="text-lg font-bold">{{ config().title }}</h3>
     <p class="py-4">{{ config().message }}</p>
     <div class="modal-action">
-      <button class="btn" (click)="onCancel.emit()">{{ config().cancelButtonText }}</button>
-      <button class="btn btn-primary" (click)="onAccept.emit()">{{ config().okButtonText }}</button>
+      <button class="btn" (click)="handleClose(false)">
+        {{ config().cancelButtonText }}
+      </button>
+      <button class="btn btn-primary" (click)="handleClose(true)">
+        {{ config().okButtonText }}
+      </button>
     </div>
   </div>
 </dialog>

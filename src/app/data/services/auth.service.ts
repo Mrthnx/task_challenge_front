@@ -1,8 +1,8 @@
-import {inject, Injectable, signal} from '@angular/core';
-import {environment} from '@environment/environment';
-import {HttpClient} from '@angular/common/http';
-import {tap} from 'rxjs';
-import {Router} from '@angular/router';
+import { inject, Injectable, signal } from '@angular/core';
+import { environment } from '@environment/environment';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 interface UserInfo {
   id: number;
@@ -11,10 +11,9 @@ interface UserInfo {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private readonly apiUrl = environment.API_URL;
   private readonly httpClient = inject(HttpClient);
   readonly router = inject(Router);
@@ -29,27 +28,29 @@ export class AuthService {
   }
 
   validateEmail(email: string) {
-    return this.httpClient.post(`${this.apiUrl}/login`, {email})
-      .pipe(tap((res: any) => {
+    return this.httpClient.post(`${this.apiUrl}/login`, { email }).pipe(
+      tap((res: any) => {
         if (res.data?.token) {
           this.storeUserInfo(res.data);
         }
-      }));
+      }),
+    );
   }
 
   registerEmail(email: string) {
-    return this.httpClient.post(`${this.apiUrl}/register`, {email})
-      .pipe(tap((res: any) => {
+    return this.httpClient.post(`${this.apiUrl}/register`, { email }).pipe(
+      tap((res: any) => {
         if (res.data?.token) {
           this.storeUserInfo(res.data);
         }
-      }));
+      }),
+    );
   }
 
   logout() {
     localStorage.removeItem('userInfo');
     this.userInfo.set(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 
   private storeUserInfo(userInfo: UserInfo) {

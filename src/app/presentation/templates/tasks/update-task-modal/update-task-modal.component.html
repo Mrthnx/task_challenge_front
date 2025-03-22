@@ -1,6 +1,14 @@
 <dialog class="modal modal-bottom sm:modal-middle modal-open">
   <div class="modal-box">
-    <h3 class="text-lg font-bold">Editar tarea</h3>
+    <div class="flex justify-between">
+      <h3 class="text-lg font-bold">Editar tarea</h3>
+      <div
+        (click)="removeTask()"
+        class="cursor-pointer text-sm border-2 bg-red-600 rounded-md px-2 py-1 transform transition-transform duration-200 hover:scale-110"
+      >
+        <i class="fa-solid fa-trash text-white"></i>
+      </div>
+    </div>
     <form [formGroup]="taskForm" (ngSubmit)="handleUpdate()">
       <div class="py-4">
         <div class="grid grid-cols-1 gap-4">
@@ -8,21 +16,45 @@
             <div class="label">
               <span class="label-text">Título</span>
             </div>
-            <input formControlName="title" type="text" placeholder="Ingresa el título de la tarea"
-                   class="input input-bordered w-full"/>
+            <input
+              formControlName="title"
+              type="text"
+              placeholder="Ingresa el título de la tarea"
+              class="input input-bordered w-full"
+            />
           </label>
           <label class="form-control w-full">
             <div class="label">
               <span class="label-text">Descripción</span>
             </div>
-            <textarea formControlName="description" placeholder="Ingresa la descripción de la tarea"
-                      class="textarea textarea-bordered w-full"></textarea>
+            <textarea
+              formControlName="description"
+              placeholder="Ingresa la descripción de la tarea"
+              class="textarea textarea-bordered w-full"
+            ></textarea>
+          </label>
+          <label>
+            <div class="label w-full flex justify-end">
+              <span class="text-sm">
+                Actualizado el
+                {{
+                  task()?.updateDate ?? task()?.createDate
+                    | date: "dd/MM/yyyy hh:mm"
+                }}
+              </span>
+            </div>
           </label>
         </div>
       </div>
       <div class="modal-action">
         <button class="btn" (click)="handleCancel()">Cancelar</button>
-        <button class="btn btn-primary" type="submit" [disabled]="taskForm.invalid">Actualizar</button>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="taskForm.invalid"
+        >
+          Actualizar
+        </button>
       </div>
     </form>
   </div>

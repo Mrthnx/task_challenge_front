@@ -1,9 +1,15 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {AuthService} from '@data/services/auth.service';
-import {DialogComponent} from '@presentation/templates/dialog/dialog.component';
-import {Router} from '@angular/router';
-import {ModalService} from '../../../core/services/modal.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { AuthService } from '@data/services/auth.service';
+import { DialogComponent } from '@presentation/templates/dialog/dialog.component';
+import { Router } from '@angular/router';
+import { ModalService } from '../../../core/services/modal.service';
 
 interface LoginForm {
   email: FormControl<string | null>;
@@ -11,15 +17,12 @@ interface LoginForm {
 
 @Component({
   selector: 'app-sign-in',
-  imports: [
-    ReactiveFormsModule,
-  ],
+  imports: [ReactiveFormsModule],
   templateUrl: './sign-in.component.html',
   standalone: true,
-  styleUrl: './sign-in.component.css'
+  styleUrl: './sign-in.component.css',
 })
 export class SignInComponent implements OnInit {
-
   readonly formBuilder = inject(FormBuilder);
   readonly authService = inject(AuthService);
   readonly router = inject(Router);
@@ -33,31 +36,31 @@ export class SignInComponent implements OnInit {
   }
 
   handleFormSubmit() {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) {
+      return;
+    }
     this.erorrMessage.set('');
 
-    this.authService
-      .validateEmail(this.loginForm.value.email ?? '')
-      .subscribe({
-        next: res => {
-          this.router.navigate(['/admin']);
-        },
-        error: err => {
-          if (err.status === 401) {
-            this.askForRegistration();
-            return;
-          }
-          this.erorrMessage.set("Oops! Something went wrong, try again later.");
+    this.authService.validateEmail(this.loginForm.value.email ?? '').subscribe({
+      next: (res) => {
+        this.router.navigate(['/admin']);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.askForRegistration();
+          return;
         }
-      });
+        this.erorrMessage.set('Oops! Something went wrong, try again later.');
+      },
+    });
   }
 
   private initForm() {
     this.loginForm = this.formBuilder.group<LoginForm>({
-      email: this.formBuilder.control('ejemplo@ejemplo.com', [
+      email: this.formBuilder.control('', [
         Validators.required,
         Validators.email,
-      ])
+      ]),
     });
   }
 
@@ -68,20 +71,21 @@ export class SignInComponent implements OnInit {
         message: 'El correo ingresado no existe, ¿deseas registrarlo?',
         okButtonText: 'Sí, registrar',
         cancelButtonText: 'Por ahora no',
-      }
+      },
     });
 
-    modal.afterClosed().subscribe(result => {
+    modal.afterClosed().subscribe((result) => {
       if (result) {
         this.erorrMessage.set('');
         this.authService
           .registerEmail(this.loginForm.value.email ?? '')
           .subscribe({
-            next: res => {
+            next: (_) => {
               this.router.navigate(['/admin']);
-            }, error: err => {
-              this.erorrMessage.set("Ocurrió un error, intenta de nuevo.");
-            }
+            },
+            error: (_) => {
+              this.erorrMessage.set('Ocurrió un error, intenta de nuevo.');
+            },
           });
       }
     });
