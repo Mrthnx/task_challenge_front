@@ -1,0 +1,26 @@
+<div class="w-full h-screen flex items-center justify-center">
+  <form [formGroup]="loginForm" (ngSubmit)="handleFormSubmit()">
+    <div class="card bg-base-100 w-96 md:shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title">Validación de usuario</h2>
+        <p class="text-sm">Ingresa tu correo para validar el acceso.</p>
+        @if (erorrMessage()) {
+          <div role="alert" class="alert alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>Ocurrio un error, intenta de nuevo.</span>
+          </div>
+        }
+        <label class="form-control w-full mt-4">
+          <div class="label">
+            <span class="label-text">Correo</span>
+          </div>
+          <input formControlName="email" type="text" placeholder="Ingresa tu correo"
+                 class="input input-bordered w-full"/>
+        </label>
+        <div class="card-actions justify-end">
+          <button class="btn btn-primary" [disabled]="loginForm.invalid" type="submit">Validar</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
