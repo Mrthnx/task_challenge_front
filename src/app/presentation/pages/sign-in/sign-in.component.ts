@@ -10,6 +10,7 @@ import { AuthService } from '@data/services/auth.service';
 import { DialogComponent } from '@presentation/templates/dialog/dialog.component';
 import { Router } from '@angular/router';
 import { ModalService } from '../../../core/services/modal.service';
+import { HTTP_STATUS_CODES } from 'src/app/core/constants/http.constant';
 
 interface LoginForm {
   email: FormControl<string | null>;
@@ -41,18 +42,20 @@ export class SignInComponent implements OnInit {
     }
     this.erorrMessage.set('');
 
-    this.authService.validateEmail(this.loginForm.value.email ?? '').subscribe({
-      next: (res) => {
-        this.router.navigate(['/admin']);
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          this.askForRegistration();
-          return;
-        }
-        this.erorrMessage.set('Oops! Something went wrong, try again later.');
-      },
-    });
+    this.authService
+      .validateEmail(this.loginForm.value.email?.toLowerCase() ?? '')
+      .subscribe({
+        next: (_) => {
+          this.router.navigate(['/admin']);
+        },
+        error: (err) => {
+          if (err.status === HTTP_STATUS_CODES.UNAUTHORIZED) {
+            this.askForRegistration();
+            return;
+          }
+          this.erorrMessage.set('Oops! Something went wrong, try again later.');
+        },
+      });
   }
 
   private initForm() {
@@ -78,7 +81,7 @@ export class SignInComponent implements OnInit {
       if (result) {
         this.erorrMessage.set('');
         this.authService
-          .registerEmail(this.loginForm.value.email ?? '')
+          .registerEmail(this.loginForm.value.email?.toLowerCase() ?? '')
           .subscribe({
             next: (_) => {
               this.router.navigate(['/admin']);

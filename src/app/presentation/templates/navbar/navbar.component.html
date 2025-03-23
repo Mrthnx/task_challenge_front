@@ -18,7 +18,19 @@
         </svg>
       </div>
     </div>
-    <a class="btn btn-ghost text-xl">Task Challenge</a>
+    <a class="btn btn-ghost text-xl">Tasks</a>
+  </div>
+  <div class="hidden md:block">
+    <form [formGroup]="searchForm">
+      <input
+        (input)="handleSearchOnInput($event)"
+        formControlName="search"
+        type="text"
+        placeholder="search"
+        maxlength="20"
+        class="input text-center rounded-box"
+      />
+    </form>
   </div>
   <div class="navbar-end">
     @if (authService.userInfo()) {

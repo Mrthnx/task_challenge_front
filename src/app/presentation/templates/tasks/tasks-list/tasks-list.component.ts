@@ -30,7 +30,7 @@ export class TasksListComponent {
             }
             return t;
           })
-          .sort((a, b) => (!a.isCompleted ? -1 : 1));
+          .sort((a, _b) => (!a.isCompleted ? -1 : 1));
       });
     });
   }
@@ -68,7 +68,7 @@ export class TasksListComponent {
               }
               return t;
             })
-            .sort((a, b) => (!a.isCompleted ? -1 : 1));
+            .sort((a, _b) => (!a.isCompleted ? -1 : 1));
         });
       }
     });
@@ -80,7 +80,7 @@ export class TasksListComponent {
     modal.afterClosed().subscribe((result) => {
       if (result) {
         this.visibleTasks.update((tasks) =>
-          [...tasks, result].sort((a, b) => (!a.isCompleted ? -1 : 1)),
+          [...tasks, result].sort((a, _b) => (!a.isCompleted ? -1 : 1)),
         );
       }
     });
