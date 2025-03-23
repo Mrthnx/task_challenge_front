@@ -79,7 +79,9 @@ export class TasksListComponent {
 
     modal.afterClosed().subscribe((result) => {
       if (result) {
-        this.visibleTasks.update((tasks) => [...tasks, result]);
+        this.visibleTasks.update((tasks) =>
+          [...tasks, result].sort((a, b) => (!a.isCompleted ? -1 : 1)),
+        );
       }
     });
   }
