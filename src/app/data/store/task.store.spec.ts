@@ -41,6 +41,7 @@ describe('TaskStore', () => {
     });
 
     store = TestBed.inject(TaskStore);
+    store.loadTasks();
   });
 
   it('should be created and load initial tasks', () => {

@@ -5,13 +5,3 @@
 * {
   @apply font-sans;
 }
-
-input:focus {
-  outline: none;
-  border: none;
-}
-
-textarea:focus {
-  outline: none;
-  border: none;
-}

@@ -3,6 +3,7 @@ import { environment } from '@environment/environment';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { TaskStore } from '@data/store/tasks.store';
 
 export interface UserInfo {
   id: number;
@@ -17,6 +18,7 @@ export class AuthService {
   private readonly apiUrl = environment.API_URL;
   private readonly httpClient = inject(HttpClient);
   readonly router = inject(Router);
+  readonly taskStore = inject(TaskStore);
 
   userInfo = signal<UserInfo | null>(null);
 
@@ -49,6 +51,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('userInfo');
+    this.taskStore.allTasks.set([]);
     this.userInfo.set(null);
     this.router.navigate(['/']);
   }

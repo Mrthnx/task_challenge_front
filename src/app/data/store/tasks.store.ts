@@ -22,10 +22,6 @@ export class TaskStore {
       .sort((a, _b) => (!a.isCompleted ? -1 : 1));
   });
 
-  constructor() {
-    this.loadTasks();
-  }
-
   addTask(task: Task) {
     return this.taskService.createTask(task).pipe(
       tap((res) => {
@@ -74,7 +70,7 @@ export class TaskStore {
     );
   }
 
-  private loadTasks() {
+  loadTasks() {
     this.taskService.getTasks().subscribe((tasks) => {
       this.allTasks.set(tasks);
     });
