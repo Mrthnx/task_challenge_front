@@ -1,36 +1,82 @@
-import { Injectable, signal } from '@angular/core';
-import { Task } from '@data/services/task.service';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { Task, TaskService } from '@data/services/task.service';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskStore {
-  private readonly tasks = signal<Task[]>([]);
-  private readonly filter = signal('');
+  private readonly taskService = inject(TaskService);
 
-  getTasks() {
-    const search = this.filter();
-    return this.tasks().filter((task) => {
-      return (
-        task.title.toLowerCase().includes(search.toLowerCase()) ||
-        task.description.toLowerCase().includes(search.toLowerCase())
-      );
-    });
-  }
+  allTasks = signal<Task[]>([]);
+  query = signal('');
+  filteredTasks = computed(() => {
+    return this.allTasks()
+      .filter((task) => {
+        return (
+          this.query().length === 0 ||
+          task.title.toLowerCase().includes(this.query().toLowerCase()) ||
+          task.description.toLowerCase().includes(this.query().toLowerCase())
+        );
+      })
+      .sort((a, _b) => (!a.isCompleted ? -1 : 1));
+  });
 
-  filterTasks(search: string) {
-    this.filter.set(search);
-  }
-
-  setTasks(newTask: Task[]) {
-    this.tasks.set(newTask);
+  constructor() {
+    this.loadTasks();
   }
 
   addTask(task: Task) {
-    this.tasks.update((currentTask) => [...currentTask, task]);
+    return this.taskService.createTask(task).pipe(
+      tap((res) => {
+        this.allTasks.update((tasks) => [...tasks, res]);
+      }),
+    );
   }
 
-  removeTask(task: Task) {
-    this.tasks.update((currentTask) => currentTask.filter((t) => t !== task));
+  updateTask(task: Task, taskId: number) {
+    return this.taskService.updateTask(task, taskId).pipe(
+      tap((res) => {
+        this.allTasks.update((tasks) => {
+          return tasks.map((t) => {
+            if (t.id === task.id) {
+              return { ...t, ...res };
+            }
+            return t;
+          });
+        });
+      }),
+    );
+  }
+
+  deleteTask(taskId: number) {
+    return this.taskService.deleteTask(taskId).pipe(
+      tap(() => {
+        this.allTasks.update((tasks) => {
+          return tasks.filter((t) => t.id !== taskId);
+        });
+      }),
+    );
+  }
+
+  markAsCompleted(taskId: number) {
+    return this.taskService.markAsCompleted(taskId).pipe(
+      tap((res) => {
+        this.allTasks.update((tasks) => {
+          return tasks.map((t) => {
+            if (t.id === taskId) {
+              return { ...t, isCompleted: !t.isCompleted };
+            }
+            return t;
+          });
+        });
+      }),
+    );
+  }
+
+  private loadTasks() {
+    this.taskService.getTasks().subscribe((tasks) => {
+      this.allTasks.set(tasks);
+    });
   }
 }

@@ -1,6 +1,7 @@
-import { Component, inject, input } from '@angular/core';
-import { Task, TaskService } from '@data/services/task.service';
-import { ModalRef } from '../../../../core/classes/modal-ref';
+import {Component, inject, input} from '@angular/core';
+import {Task} from '@data/services/task.service';
+import {ModalRef} from '../../../../core/classes/modal-ref';
+import {TaskStore} from '@data/store/tasks.store';
 
 @Component({
   selector: 'app-delete-task-dialog',
@@ -11,12 +12,12 @@ import { ModalRef } from '../../../../core/classes/modal-ref';
 })
 export class DeleteTaskModalComponent {
   readonly modalRef = inject(ModalRef);
-  readonly taskService = inject(TaskService);
+  readonly taskStore = inject(TaskStore);
 
   task = input<Task>();
 
   handleConfirm() {
-    this.taskService.deleteTask(this.task()?.id ?? 0).subscribe({
+    this.taskStore.deleteTask(this.task()?.id ?? 0).subscribe({
       next: () => this.modalRef.close(true),
       error: (err) => console.log(err),
     });

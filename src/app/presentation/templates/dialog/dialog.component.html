@@ -6,9 +6,11 @@
     <h3 class="text-lg font-bold">{{ config().title }}</h3>
     <p class="py-4">{{ config().message }}</p>
     <div class="modal-action">
-      <button class="btn" (click)="handleClose(false)">
-        {{ config().cancelButtonText }}
-      </button>
+      @if (config().cancelButtonText.length > 0) {
+        <button class="btn" (click)="handleClose(false)">
+          {{ config().cancelButtonText }}
+        </button>
+      }
       <button class="btn btn-primary" (click)="handleClose(true)">
         {{ config().okButtonText }}
       </button>

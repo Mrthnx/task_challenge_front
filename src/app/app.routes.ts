@@ -19,4 +19,9 @@ export const routes: Routes = [
       ),
     canActivate: [privateGuard],
   },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full',
+  },
 ];

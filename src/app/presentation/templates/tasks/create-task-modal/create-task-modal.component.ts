@@ -1,13 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ModalRef } from '../../../../core/classes/modal-ref';
-import { Task, TaskService } from '@data/services/task.service';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import {Component, inject, OnInit} from '@angular/core';
+import {ModalRef} from '../../../../core/classes/modal-ref';
+import {Task} from '@data/services/task.service';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {TaskStore} from '@data/store/tasks.store';
 
 interface CreateTaskForm {
   title: FormControl<string | null>;
@@ -24,7 +19,7 @@ interface CreateTaskForm {
 })
 export class CreateTaskModalComponent implements OnInit {
   readonly modalRef = inject(ModalRef);
-  readonly taskService = inject(TaskService);
+  readonly taskStore = inject(TaskStore);
   readonly formBuilder = inject(FormBuilder);
 
   taskForm!: FormGroup<CreateTaskForm>;
@@ -38,7 +33,7 @@ export class CreateTaskModalComponent implements OnInit {
 
     const newTask = this.taskForm.value;
 
-    this.taskService.createTask(newTask as Task).subscribe({
+    this.taskStore.addTask(newTask as Task).subscribe({
       next: (res) => {
         this.modalRef.close(res);
       },

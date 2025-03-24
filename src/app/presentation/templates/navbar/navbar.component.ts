@@ -1,9 +1,8 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@data/services/auth.service';
-import { TaskService } from '@data/services/task.service';
 import { TaskStore } from '@data/store/tasks.store';
-import { Subject, debounceTime } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 const DEBOUNCE_TIME = 100;
 
@@ -14,31 +13,27 @@ const DEBOUNCE_TIME = 100;
   standalone: true,
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   readonly authService = inject(AuthService);
   readonly formBuilder = inject(FormBuilder);
-  readonly taskService = inject(TaskService);
   readonly tasksStore = inject(TaskStore);
 
-  searchForm: FormGroup;
-  searchSubject = new Subject();
+  searchControl!: FormControl<string | null>;
 
-  constructor() {
-    this.searchForm = this.formBuilder.group({
-      search: this.formBuilder.control(''),
-    });
-
-    this.searchSubject.pipe(debounceTime(DEBOUNCE_TIME)).subscribe((event) => {
-      const valueSearch = (event as any).target.value;
-      this.tasksStore.filterTasks(valueSearch);
-    });
+  ngOnInit() {
+    this.initSeachControl();
   }
 
   handleLogout() {
     this.authService.logout();
   }
 
-  handleSearchOnInput(event: Event) {
-    this.searchSubject.next(event);
+  private initSeachControl() {
+    this.searchControl = this.formBuilder.control<string>('');
+    this.searchControl.valueChanges
+      .pipe(debounceTime(DEBOUNCE_TIME))
+      .subscribe((value) => {
+        this.tasksStore.query.set(value ?? '');
+      });
   }
 }

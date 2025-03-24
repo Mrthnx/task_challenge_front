@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
 
-interface UserInfo {
+export interface UserInfo {
   id: number;
   email: string;
   token: string;

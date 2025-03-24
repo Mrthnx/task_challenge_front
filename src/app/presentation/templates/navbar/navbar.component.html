@@ -21,16 +21,17 @@
     <a class="btn btn-ghost text-xl">Tasks</a>
   </div>
   <div class="hidden md:block">
-    <form [formGroup]="searchForm">
+    <label
+      class="input input-bordered flex items-center gap-2 rounded-full !outline-none"
+    >
       <input
-        (input)="handleSearchOnInput($event)"
-        formControlName="search"
         type="text"
-        placeholder="search"
-        maxlength="20"
-        class="input text-center rounded-box"
+        class="grow"
+        placeholder="Buscar tarea"
+        [formControl]="searchControl"
       />
-    </form>
+      <i class="fa-solid fa-search text-gray-400"></i>
+    </label>
   </div>
   <div class="navbar-end">
     @if (authService.userInfo()) {

@@ -1,14 +1,9 @@
-import { Component, inject, input, OnInit } from '@angular/core';
-import { ModalRef } from '../../../../core/classes/modal-ref';
-import { Task, TaskService } from '@data/services/task.service';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { ModalService } from 'src/app/core/services/modal.service';
-import { DatePipe } from '@angular/common';
+import {Component, inject, input, OnInit} from '@angular/core';
+import {ModalRef} from '../../../../core/classes/modal-ref';
+import {Task} from '@data/services/task.service';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule,} from '@angular/forms';
+import {DatePipe} from '@angular/common';
+import {TaskStore} from '@data/store/tasks.store';
 
 interface UpdateTaskForm {
   title: FormControl<string | null>;
@@ -24,10 +19,8 @@ interface UpdateTaskForm {
 })
 export class UpdateTaskModalComponent implements OnInit {
   readonly modalRef = inject(ModalRef);
-  readonly taskService = inject(TaskService);
+  readonly taskStore = inject(TaskStore);
   readonly formBuilder = inject(FormBuilder);
-
-  readonly modalService = inject(ModalService);
 
   task = input<Task>();
 
@@ -42,7 +35,7 @@ export class UpdateTaskModalComponent implements OnInit {
 
     const newTask = this.taskForm.value;
 
-    this.taskService
+    this.taskStore
       .updateTask(newTask as Task, this.task()?.id ?? 0)
       .subscribe({
         next: (res) => {
@@ -57,7 +50,10 @@ export class UpdateTaskModalComponent implements OnInit {
   }
 
   removeTask() {
-    this.modalRef.close('delete');
+    this.taskStore.deleteTask(this.task()?.id ?? 0).subscribe({
+      next: () => this.modalRef.close(true),
+      error: (err) => console.log(err),
+    });
   }
 
   private initForm() {
