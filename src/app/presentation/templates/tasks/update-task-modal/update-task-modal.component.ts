@@ -1,9 +1,14 @@
-import {Component, inject, input, OnInit} from '@angular/core';
-import {ModalRef} from '../../../../core/classes/modal-ref';
-import {Task} from '@data/services/task.service';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule,} from '@angular/forms';
-import {DatePipe} from '@angular/common';
-import {TaskStore} from '@data/store/tasks.store';
+import { Component, inject, input, OnInit } from '@angular/core';
+import { ModalRef } from '../../../../core/classes/modal-ref';
+import { Task } from '@data/services/task.service';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { TaskStore } from '@data/store/tasks.store';
 
 interface UpdateTaskForm {
   title: FormControl<string | null>;
@@ -34,15 +39,14 @@ export class UpdateTaskModalComponent implements OnInit {
     if (!this.taskForm.valid) return;
 
     const newTask = this.taskForm.value;
-
-    this.taskStore
-      .updateTask(newTask as Task, this.task()?.id ?? 0)
-      .subscribe({
-        next: (res) => {
-          this.modalRef.close(res);
-        },
-        error: (err) => console.log(err),
-      });
+    console.log(newTask);
+    console.log(this.task());
+    this.taskStore.updateTask(newTask as Task, this.task()?.id ?? 0).subscribe({
+      next: (res) => {
+        this.modalRef.close(res);
+      },
+      error: (err) => console.log(err),
+    });
   }
 
   handleCancel() {
