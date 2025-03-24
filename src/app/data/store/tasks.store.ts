@@ -35,7 +35,7 @@ export class TaskStore {
       tap((res) => {
         this.allTasks.update((tasks) => {
           return tasks.map((t) => {
-            if (t.id === task.id) {
+            if (t.id === res.id) {
               return { ...t, ...res };
             }
             return t;
