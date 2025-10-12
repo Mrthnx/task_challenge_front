@@ -92,22 +92,32 @@
               </h3>
             </div>
             <div class="dropdown dropdown-end">
-              <div tabindex="0" role="button" class="btn btn-ghost btn-sm btn-circle text-base-100 hover:bg-base-100/20">
-                <i class="fa-solid fa-ellipsis-vertical"></i>
+              <div tabindex="0" role="button" class="btn btn-ghost btn-sm btn-circle hover:bg-base-100/30">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-base-100" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
               </div>
-              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-xl border border-base-300">
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-xl border-2 border-base-300">
                 @if (!task.isCompleted) {
                   <li>
-                    <a (click)="handleUpdateTask(task)" class="flex items-center gap-2">
-                      <i class="fa-solid fa-edit text-info"></i>
-                      <span>Editar</span>
+                    <a (click)="handleUpdateTask(task)" class="flex items-center gap-2 hover:bg-warning/10"
+                      [ngClass]="{
+                        'text-success': task.isCompleted,
+                        'text-warning': !task.isCompleted
+                      }">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      <span class="font-medium">Editar</span>
                     </a>
                   </li>
                 }
                 <li>
-                  <a (click)="handleDeleteTask(task)" class="flex items-center gap-2 hover:bg-error hover:text-error-content">
-                    <i class="fa-solid fa-trash text-error"></i>
-                    <span class="text-error">Eliminar</span>
+                  <a (click)="handleDeleteTask(task)" class="flex items-center gap-2 text-error hover:bg-error hover:text-error-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    <span class="font-semibold">Eliminar</span>
                   </a>
                 </li>
               </ul>
