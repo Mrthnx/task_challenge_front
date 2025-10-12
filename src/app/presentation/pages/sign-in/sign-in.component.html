@@ -1,45 +1,108 @@
-<div
-  class="w-screen h-screen flex items-center justify-center"
-  style="background: linear-gradient(to bottom, #d0e1f9, #f1f6f9)"
->
-  <form
-    [formGroup]="loginForm"
-    (ngSubmit)="handleFormSubmit()"
-    class="p-6 rounded-lg shadow-lg bg-white w-full md:max-w-md"
-  >
-    <div class="card bg-base-100 w-full md:shadow-xl">
-      <div class="card-body">
-        <h2 class="text-center text-2xl font-bold">Task Challenge</h2>
-        <p class="text-sm text-center text-gray-600">
-          Ingresa tu correo para validar el acceso.
-        </p>
-        @if (erorrMessage()) {
-          <div role="alert" class="alert alert-error mt-4">
-            <i class="fa-solid fa-circle-exclamation"></i>
-            <span>Ocurrio un error, intenta de nuevo.</span>
-          </div>
-        }
-        <label class="form-control w-full mt-4">
-          <div class="label">
-            <span class="label-text">Correo</span>
-          </div>
-          <input
-            formControlName="email"
-            type="text"
-            placeholder="Ingresa tu correo"
-            class="input input-bordered w-full border-gray-300 focus:border-black focus:ring focus:ring-blue-200"
-          />
-        </label>
-        <div class="card-actions justify-end mt-6">
-          <button
-            class="btn btn-primary w-full"
-            [disabled]="loginForm.invalid"
-            type="submit"
-          >
-            Validar
-          </button>
+<div class="w-screen h-screen flex bg-base-200">
+  <!-- Left Side - Illustration/Branding -->
+  <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary to-secondary items-center justify-center p-12 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-20 left-20 w-64 h-64 bg-base-100 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 right-20 w-96 h-96 bg-base-100 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative z-10 text-center animate-fade-in">
+      <div class="mb-8">
+        <i class="fa-solid fa-list-check text-9xl text-base-100 drop-shadow-2xl"></i>
+      </div>
+      <h1 class="text-5xl font-bold text-base-100 mb-4">Task Challenge</h1>
+      <p class="text-xl text-base-100/90 max-w-md mx-auto">
+        Organiza tus tareas de manera eficiente y alcanza tus objetivos
+      </p>
+      <div class="mt-12 flex justify-center gap-4">
+        <div class="stat bg-base-100/10 backdrop-blur-sm rounded-box">
+          <div class="stat-value text-base-100">∞</div>
+          <div class="stat-title text-base-100/80">Tareas</div>
+        </div>
+        <div class="stat bg-base-100/10 backdrop-blur-sm rounded-box">
+          <div class="stat-value text-base-100">24/7</div>
+          <div class="stat-title text-base-100/80">Disponible</div>
         </div>
       </div>
     </div>
-  </form>
+  </div>
+
+  <!-- Right Side - Login Form -->
+  <div class="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12">
+    <div class="w-full max-w-md animate-slide-up">
+      <!-- Mobile Logo -->
+      <div class="lg:hidden text-center mb-8">
+        <i class="fa-solid fa-list-check text-6xl text-primary mb-4"></i>
+        <h1 class="text-3xl font-bold text-base-content">Task Challenge</h1>
+      </div>
+
+      <div class="card bg-base-100 shadow-2xl w-full">
+        <div class="card-body">
+          <div class="text-center mb-6">
+            <h2 class="text-3xl font-bold text-base-content mb-2">¡Bienvenido!</h2>
+            <p class="text-base-content/70">
+              Ingresa tu correo para continuar
+            </p>
+          </div>
+
+          @if (erorrMessage()) {
+            <div role="alert" class="alert alert-error animate-scale-in mb-4">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ erorrMessage() }}</span>
+            </div>
+          }
+
+          <form [formGroup]="loginForm" (ngSubmit)="handleFormSubmit()">
+            <div class="form-control w-full">
+              <label class="label">
+                <span class="label-text font-semibold">Correo electrónico</span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2 focus-within:input-primary w-full">
+                <i class="fa-solid fa-envelope text-base-content/50"></i>
+                <input
+                  formControlName="email"
+                  type="email"
+                  class="grow w-full"
+                  placeholder="tu@email.com"
+                />
+              </label>
+              @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+                <label class="label">
+                  <span class="label-text-alt text-error">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                    Ingresa un correo válido
+                  </span>
+                </label>
+              }
+            </div>
+
+            <div class="form-control mt-6 w-full">
+              <button
+                class="btn btn-primary btn-lg w-full"
+                [disabled]="loginForm.invalid"
+                type="submit"
+              >
+                @if (loginForm.invalid) {
+                  <i class="fa-solid fa-lock"></i>
+                } @else {
+                  <i class="fa-solid fa-arrow-right"></i>
+                }
+                Continuar
+              </button>
+            </div>
+          </form>
+
+          <div class="divider text-xs text-base-content/50 my-6">Sistema seguro</div>
+          
+          <div class="text-center text-sm text-base-content/60">
+            <i class="fa-solid fa-shield-halved mr-2"></i>
+            Tu información está protegida
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-6 text-sm text-base-content/60">
+        <p>¿Nuevo usuario? El sistema te registrará automáticamente</p>
+      </div>
+    </div>
+  </div>
 </div>

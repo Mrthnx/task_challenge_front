@@ -1,54 +1,77 @@
-<div class="navbar bg-base-100">
+<div class="navbar bg-base-100 shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-base-100/95">
   <div class="navbar-start">
     <div class="dropdown">
       <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h8m-8 6h16"
-          />
-        </svg>
+        <i class="fa-solid fa-bars text-xl"></i>
       </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow-xl border border-base-300">
+        <li>
+          <div class="form-control">
+            <label class="input input-bordered input-sm flex items-center gap-2">
+              <input
+                type="text"
+                class="grow"
+                placeholder="Buscar..."
+                [formControl]="searchControl"
+              />
+              <i class="fa-solid fa-search text-base-content/50"></i>
+            </label>
+          </div>
+        </li>
+      </ul>
     </div>
-    <a class="btn btn-ghost text-xl">Tasks</a>
+    <a class="btn btn-ghost normal-case text-xl gap-2">
+      <i class="fa-solid fa-list-check text-primary"></i>
+      <span class="font-bold">Task Challenge</span>
+    </a>
   </div>
-  <div class="hidden md:block">
-    <label
-      class="input input-bordered flex items-center gap-2 rounded-full !outline-none"
-    >
+  
+  <div class="navbar-center hidden lg:flex">
+    <label class="input input-bordered flex items-center gap-2 rounded-full w-80 focus-within:input-primary">
+      <i class="fa-solid fa-search text-base-content/50"></i>
       <input
         type="text"
         class="grow"
-        placeholder="Buscar tarea"
+        placeholder="Buscar tareas..."
         [formControl]="searchControl"
       />
-      <i class="fa-solid fa-search text-gray-400"></i>
+      @if (searchControl.value) {
+        <button class="btn btn-ghost btn-xs btn-circle" (click)="clearSearch()">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      }
     </label>
   </div>
-  <div class="navbar-end">
+  
+  <div class="navbar-end gap-2">
+    <!-- User Menu -->
     @if (authService.userInfo()) {
-      <div class="dropdown dropdown-bottom dropdown-end">
-        <div tabindex="0" role="button" class="btn btn-ghost">
-          <i class="fas fa-user mr-2"></i>
-          {{ authService.userInfo()?.email!.split("@")[0] }}
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost gap-2">
+          <div class="avatar placeholder">
+            <div class="bg-primary text-primary-content w-10 rounded-full">
+              <span class="text-sm font-bold">
+                {{ authService.userInfo()?.email!.charAt(0).toUpperCase() }}
+              </span>
+            </div>
+          </div>
+          <span class="hidden md:inline font-semibold">
+            {{ authService.userInfo()?.email!.split("@")[0] }}
+          </span>
         </div>
-        <ul
-          tabindex="0"
-          class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 shadow-lg transition-transform transform hover:scale-105"
-        >
-          <li
-            (click)="handleLogout()"
-            class="cursor-pointer p-2 flex items-center bg-gray-200 flex-row"
-          >
-            <i class="fas fa-sign-out-alt mr-2"></i> Salir
+        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-xl border border-base-300 mt-4">
+          <li class="menu-title">
+            <span class="flex items-center gap-2 truncate">
+              <i class="fa-solid fa-envelope text-xs"></i>
+              <span class="truncate text-xs">{{ authService.userInfo()?.email }}</span>
+            </span>
+          </li>
+          <div class="divider my-1"></div>
+          <li>
+            <a (click)="handleLogout()" class="text-error">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              Cerrar sesión
+            </a>
           </li>
         </ul>
       </div>

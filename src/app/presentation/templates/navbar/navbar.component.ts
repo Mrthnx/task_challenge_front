@@ -28,6 +28,10 @@ export class NavbarComponent implements OnInit {
     this.authService.logout();
   }
 
+  clearSearch() {
+    this.searchControl.setValue('');
+  }
+
   private initSeachControl() {
     this.searchControl = this.formBuilder.control<string>('');
     this.searchControl.valueChanges

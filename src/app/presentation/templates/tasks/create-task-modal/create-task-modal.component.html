@@ -1,53 +1,86 @@
 <dialog class="modal modal-bottom sm:modal-middle modal-open">
   <div class="modal-box">
-    <h3 class="text-lg font-bold">Crear tarea</h3>
+    <div class="flex items-start gap-4 mb-6">
+      <div class="rounded-full bg-primary/10 p-3">
+        <i class="fa-solid fa-plus-circle text-3xl text-primary"></i>
+      </div>
+      <div>
+        <h3 class="text-2xl font-bold">Crear Nueva Tarea</h3>
+        <p class="text-sm text-base-content/60 mt-1">Completa los campos para agregar una tarea</p>
+      </div>
+    </div>
+
     <form [formGroup]="taskForm" (ngSubmit)="handleSubmit()">
-      <div class="py-4">
-        <div class="grid grid-cols-1 gap-4">
-          <label class="form-control w-full">
-            <div class="label">
-              <span class="label-text">Título</span>
-            </div>
-            <input
-              formControlName="title"
-              type="text"
-              placeholder="Ingresa el título de la tarea"
-              class="input input-bordered w-full"
-            />
+      <div class="space-y-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">
+              <i class="fa-solid fa-heading text-primary mr-2"></i>
+              Título
+            </span>
           </label>
-          <label class="form-control w-full">
-            <div class="label">
-              <span class="label-text">Descripción</span>
-            </div>
-            <textarea
-              formControlName="description"
-              placeholder="Ingresa la descripción de la tarea"
-              class="textarea textarea-bordered w-full"
-            ></textarea>
-          </label>
-          <div class="form-control w-full">
-            <label class="label cursor-pointer">
-              <input
-                type="checkbox"
-                checked="checked"
-                class="checkbox"
-                formControlName="isCompleted"
-              />
-              <span class="label-text">Marcar como completada</span>
+          <input
+            formControlName="title"
+            type="text"
+            placeholder="Ej: Completar reporte mensual"
+            class="input input-bordered w-full focus:input-primary"
+          />
+          @if (taskForm.get('title')?.invalid && taskForm.get('title')?.touched) {
+            <label class="label">
+              <span class="label-text-alt text-error">
+                <i class="fa-solid fa-circle-exclamation mr-1"></i>
+                El título es requerido
+              </span>
             </label>
-          </div>
+          }
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">
+              <i class="fa-solid fa-align-left text-primary mr-2"></i>
+              Descripción
+            </span>
+          </label>
+          <textarea
+            formControlName="description"
+            placeholder="Describe los detalles de la tarea..."
+            class="textarea textarea-bordered w-full h-24 focus:textarea-primary"
+          ></textarea>
+        </div>
+
+        <div class="form-control">
+          <label class="label cursor-pointer justify-start gap-4 bg-base-200 rounded-lg p-4">
+            <input
+              type="checkbox"
+              class="checkbox checkbox-success"
+              formControlName="isCompleted"
+            />
+            <div>
+              <span class="label-text font-semibold">Marcar como completada</span>
+              <p class="text-xs text-base-content/60 mt-1">La tarea se creará con estado completado</p>
+            </div>
+          </label>
         </div>
       </div>
+
       <div class="modal-action">
-        <button class="btn" (click)="handleCancel()">Cancelar</button>
+        <button type="button" class="btn btn-ghost" (click)="handleCancel()">
+          <i class="fa-solid fa-times"></i>
+          Cancelar
+        </button>
         <button
           class="btn btn-primary"
           type="submit"
           [disabled]="taskForm.invalid"
         >
-          Crear
+          <i class="fa-solid fa-check"></i>
+          Crear Tarea
         </button>
       </div>
     </form>
   </div>
+  <form method="dialog" class="modal-backdrop">
+    <button (click)="handleCancel()">close</button>
+  </form>
 </dialog>

@@ -1,49 +1,164 @@
-<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-  <div class="w-full h-full bg-base-200 flex items-center justify-center">
-    <button class="btn btn-neutral btn-outline" (click)="handleCreateTask()">
-      <span> Crear tarea </span>
-      <i class="fa-solid fa-plus pt-1"></i>
-    </button>
+<div class="animate-fade-in">
+  <!-- Filter Tabs -->
+  <div role="tablist" class="tabs tabs-boxed bg-base-100 shadow-md mb-6 p-1">
+    <a 
+      role="tab" 
+      class="tab gap-2"
+      [class.tab-active]="currentFilter() === 'all'"
+      (click)="setFilter('all')"
+    >
+      <i class="fa-solid fa-list"></i>
+      Todas
+      <span class="badge badge-sm">{{ taskStore.allTasks().length }}</span>
+    </a>
+    <a 
+      role="tab" 
+      class="tab gap-2"
+      [class.tab-active]="currentFilter() === 'pending'"
+      (click)="setFilter('pending')"
+    >
+      <i class="fa-solid fa-clock"></i>
+      Pendientes
+      <span class="badge badge-warning badge-sm">{{ getPendingCount() }}</span>
+    </a>
+    <a 
+      role="tab" 
+      class="tab gap-2"
+      [class.tab-active]="currentFilter() === 'completed'"
+      (click)="setFilter('completed')"
+    >
+      <i class="fa-solid fa-check-circle"></i>
+      Completadas
+      <span class="badge badge-success badge-sm">{{ getCompletedCount() }}</span>
+    </a>
   </div>
-  @for (task of taskStore.filteredTasks(); track task.id) {
-    <div class="flex flex-col w-full bg-base-200 shadow">
-      <div
-        class="py-2 pl-4 pr-1 flex justify-between items-center rounded-t-lg"
-        [ngClass]="{
-          'bg-success': task.isCompleted,
-          'bg-warning': !task.isCompleted,
-        }"
-      >
-        <input
-          type="checkbox"
-          [checked]="task.isCompleted"
-          class="checkbox checkbox-primary mr-2"
-          (change)="handleTaskCheckboxChange(task)"
-        />
-        <h2 class="font-bold text-sm truncate">{{ task.title }}</h2>
-        @if (!task.isCompleted) {
-          <div
-            class="pr-4 cursor-pointer text-sm"
-            (click)="handleUpdateTask(task)"
-          >
-            <i class="fa-solid fa-edit"></i>
-          </div>
-        } @else {
-          <div
-            class="pr-4 cursor-pointer text-sm"
-            (click)="handleDeleteTask(task)"
-          >
-            <i class="fa-solid fa-trash"></i>
-          </div>
-        }
-      </div>
-      <div class="p-4">
-        <p class="mb-4 text-sm">
-          {{ task.description }}
-        </p>
-        <div class="badge badge-info text-xs">
-          Creado: {{ task.createDate | date: "dd/MM/yyyy" }}
+
+  <!-- Tasks Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <!-- Create Task Card -->
+    <div class="card bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-dashed border-primary/30 hover:border-primary/60 transition-all duration-300 cursor-pointer group min-h-[200px]" (click)="handleCreateTask()">
+      <div class="card-body items-center justify-center text-center">
+        <div class="rounded-full bg-primary/20 p-6 group-hover:scale-110 transition-transform duration-300">
+          <i class="fa-solid fa-plus text-4xl text-primary"></i>
         </div>
+        <h3 class="font-bold text-lg text-primary mt-4">Crear Nueva Tarea</h3>
+        <p class="text-sm text-base-content/60">Haz clic para agregar</p>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    @if (getFilteredTasks().length === 0 && currentFilter() !== 'all') {
+      <div class="col-span-full">
+        <div class="card bg-base-100 shadow-lg">
+          <div class="card-body items-center text-center py-16">
+            @if (currentFilter() === 'pending') {
+              <i class="fa-solid fa-check-double text-6xl text-success mb-4"></i>
+              <h3 class="text-2xl font-bold">¡Excelente trabajo!</h3>
+              <p class="text-base-content/60">No tienes tareas pendientes</p>
+            } @else {
+              <i class="fa-solid fa-clipboard-list text-6xl text-info mb-4"></i>
+              <h3 class="text-2xl font-bold">Aún no hay tareas completadas</h3>
+              <p class="text-base-content/60">Comienza a marcar tus tareas como completadas</p>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Task Cards -->
+    @for (task of getFilteredTasks(); track task.id) {
+      <div class="card bg-base-100 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 animate-scale-in" [style.animation-delay.ms]="$index * 50">
+        <div class="card-body p-0">
+          <!-- Task Header -->
+          <div class="p-4 rounded-t-2xl flex items-start gap-3 transition-colors duration-300"
+            [ngClass]="{
+              'bg-success': task.isCompleted,
+              'bg-warning': !task.isCompleted
+            }"
+            [class.animate-paint-success]="task.id === animatingTaskId()">
+            <input
+              type="checkbox"
+              [checked]="task.isCompleted"
+              class="checkbox checkbox-lg border-2 border-base-100 mt-1"
+              [ngClass]="{
+                'checkbox-success': task.isCompleted,
+                'checkbox-warning': !task.isCompleted
+              }"
+              (change)="handleTaskCheckboxChange(task)"
+            />
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-base-100 text-lg leading-tight" [class.line-through]="task.isCompleted">
+                {{ task.title }}
+              </h3>
+            </div>
+            <div class="dropdown dropdown-end">
+              <div tabindex="0" role="button" class="btn btn-ghost btn-sm btn-circle text-base-100 hover:bg-base-100/20">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-xl border border-base-300">
+                @if (!task.isCompleted) {
+                  <li>
+                    <a (click)="handleUpdateTask(task)" class="flex items-center gap-2">
+                      <i class="fa-solid fa-edit text-info"></i>
+                      <span>Editar</span>
+                    </a>
+                  </li>
+                }
+                <li>
+                  <a (click)="handleDeleteTask(task)" class="flex items-center gap-2 hover:bg-error hover:text-error-content">
+                    <i class="fa-solid fa-trash text-error"></i>
+                    <span class="text-error">Eliminar</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Task Body -->
+          <div class="p-4">
+            <p class="text-base-content/80 text-sm mb-4 line-clamp-3">
+              {{ task.description || 'Sin descripción' }}
+            </p>
+            
+            <div class="flex items-center justify-between">
+              <div class="badge badge-ghost gap-2">
+                <i class="fa-solid fa-calendar text-xs"></i>
+                {{ task.createDate | date: "dd/MM/yyyy" }}
+              </div>
+              
+              @if (task.isCompleted) {
+                <div class="badge badge-success gap-2">
+                  <i class="fa-solid fa-check"></i>
+                  Completada
+                </div>
+              } @else {
+                <div class="badge badge-warning gap-2">
+                  <i class="fa-solid fa-clock"></i>
+                  Pendiente
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- No Tasks Message -->
+  @if (taskStore.allTasks().length === 0) {
+    <div class="card bg-base-100 shadow-xl mt-8">
+      <div class="card-body items-center text-center py-20">
+        <div class="rounded-full bg-primary/10 p-8 mb-6">
+          <i class="fa-solid fa-tasks text-6xl text-primary"></i>
+        </div>
+        <h2 class="text-3xl font-bold mb-2">¡Comienza tu productividad!</h2>
+        <p class="text-base-content/60 mb-6 max-w-md">
+          Aún no tienes tareas registradas. Crea tu primera tarea y comienza a organizar tus actividades.
+        </p>
+        <button class="btn btn-primary btn-lg gap-2" (click)="handleCreateTask()">
+          <i class="fa-solid fa-plus"></i>
+          Crear mi primera tarea
+        </button>
       </div>
     </div>
   }
