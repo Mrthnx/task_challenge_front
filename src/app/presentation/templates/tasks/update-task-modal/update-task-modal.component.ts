@@ -53,13 +53,6 @@ export class UpdateTaskModalComponent implements OnInit {
     this.modalRef.close();
   }
 
-  removeTask() {
-    this.taskStore.deleteTask(this.task()?.id ?? 0).subscribe({
-      next: () => this.modalRef.close(true),
-      error: (err) => console.log(err),
-    });
-  }
-
   private initForm() {
     this.taskForm = this.formBuilder.group<UpdateTaskForm>({
       title: this.formBuilder.control(this.task()?.title ?? ''),
