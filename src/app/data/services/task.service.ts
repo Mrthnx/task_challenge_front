@@ -26,7 +26,7 @@ export class TaskService {
   }
 
   markAsCompleted(taskId: number) {
-    return this.httpClient.patch(`${this.apiUrl}/tasks/${taskId}`, {});
+    return this.httpClient.put(`${this.apiUrl}/tasks/status/${taskId}`, {});
   }
 
   createTask(task: Task) {

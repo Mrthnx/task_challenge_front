@@ -59,8 +59,8 @@ describe('TaskService', () => {
   it('should mark task as completed', () => {
     service.markAsCompleted(1).subscribe();
 
-    const req = httpMock.expectOne(`${service['apiUrl']}/tasks/1`);
-    expect(req.request.method).toBe('PATCH');
+    const req = httpMock.expectOne(`${service['apiUrl']}/tasks/status/1`);
+    expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual({});
     req.flush({});
   });
